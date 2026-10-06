@@ -2,6 +2,8 @@
 
 A simple Todo application built with React and Node.js.
 
+#### **NOTE: This is not user-login specific
+
 ### Developer : Mohan Pramanik
 
 ## Features
