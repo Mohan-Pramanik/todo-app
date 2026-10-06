@@ -1,48 +1,45 @@
+// Base URL of the backend.
+// On Vercel: VITE_API_URL is set to the Render URL.
+// On your machine: it's not set, so it falls back to localhost.
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const API_URL = `${BASE_URL}/api/todo`;
+
 //This function is used to send a new Todo item from your frontend to your backend server using a POST request.
 export const addItemToServer = async (task, date) => {
   // Send a POST request to the backend server with the new Todo item data
-  const response = await fetch("http://localhost:3001/api/todo", {
-      method: "POST",
+  const response = await fetch(API_URL, {
+    method: "POST",
 
-      //This tells Express: The request body contains JSON data.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      //Therefore, your Express server should generally have middleware to parse JSON request bodies, such as app.use(express.json());
+    //This tells Express: The request body contains JSON data.
+    headers: {
+      "Content-Type": "application/json",
+    },
 
-      // Convert the data to JSON
-      //     {
-      //          "task": "Study DSA",
-      //         "date": "2026-10-06"
-      //    }
-      body: JSON.stringify({ task, date }),
+    // Convert the data to JSON
+    body: JSON.stringify({ task, date }),
   });
 
-  //Get the server response
   //response.json() converts that JSON response into a JavaScript object.
   const item = await response.json();
-  return mapServerItemToLocalItem(item); // define bellow function to map server item to local item
+  return mapServerItemToLocalItem(item);
 };
 
 export const getItemsFromServer = async () => {
-  const response = await fetch("http://localhost:3001/api/todo");
+  const response = await fetch(API_URL);
   const items = await response.json();
   return items.map(mapServerItemToLocalItem);
 };
 
 export const markItemCompletedOnServer = async (id) => {
-  const response = await fetch(
-    `http://localhost:3001/api/todo/${id}/completed`,
-    {
-      method: "PUT",
-    }
-  );
+  const response = await fetch(`${API_URL}/${id}/completed`, {
+    method: "PUT",
+  });
   const item = await response.json();
   return mapServerItemToLocalItem(item);
 };
 
 export const deleteItemFromServer = async (id) => {
-  await fetch(`http://localhost:3001/api/todo/${id}`, {
+  await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
   });
   return id;
